@@ -9,10 +9,15 @@
 </head>
 <body>
     <div class="options">
-        <div>
-            <button onclick = 'buttonClicked()'>Choose Grid Length</button>
-        </div>    
-    </div>
+        <div class="slider-container">
+            <p>Pixel Size: <span id="sizeValue"></span></p>
+            <input type="range" min="2" max="10" value="5" class="slider" id="gridRange">
+        </div>
+        <div class="style-options">
+            <button class="black" onclick="styleButtonClicked()">Black</button>
+            <button class="rainbow" onclick="styleButtonClicked()">Rainbow Mode</button>  
+        </div>
+        </div>
     
     <div id="grid">
 
