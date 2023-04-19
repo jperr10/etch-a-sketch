@@ -35,11 +35,15 @@ button {
     flex-wrap: wrap;
     justify-content: center;
     border: 2px solid black;
-
 }
 
 .boxClear {
     border: .5px dotted black;
     color: red;
     text-align: center;
+}
+
+.active {
+    color: white;
+    background: black;
 }

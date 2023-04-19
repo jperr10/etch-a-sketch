@@ -1,13 +1,18 @@
 const grid = document.querySelector('#grid');
 const slider = document.getElementById("gridRange");
-const output = document.getElementById("sizeValue");
-output.textContent = slider.value;
+const sizeValue = document.getElementById("sizeValue");
+sizeValue.textContent = slider.value;
+const blackButton = document.getElementById("black-button");
+const rainbowButton = document.getElementById("rainbow-button");
+blackButton.classList.toggle('active');
 
 let boxes = [];
+
+changeToBlackMode();
 makeEtchASketch(slider.value);
 
 slider.oninput = function() {
-    output.textContent = this.value;
+    sizeValue.textContent = this.value;
     makeEtchASketch(slider.value);
 }
 
@@ -18,8 +23,12 @@ function makeEtchASketch(sliderValue) {
     gridList = grid.querySelectorAll('div');
     const squares = document.querySelectorAll('.square');
     squares.forEach((square) => {
-        square.addEventListener('mousemove', () => {
-            simpleBlack(square);
+        square.addEventListener('mouseenter', () => {
+            if (grid.getAttribute('class') === 'black') {
+                simpleBlack(square);
+            } else if (grid.getAttribute('class') === 'rainbow') {
+                rainbow(square);
+            }
         });
     });
 }
@@ -39,9 +48,10 @@ function fillBoxesArray(length) {
 }
 
 function createGrid(boxes) {
+    //Adjust const box, use map() instead?
     for (const box of boxes) {
         const newDiv = document.createElement('div');
-        newDiv.id = `${boxes[box]}`;
+        //newDiv.id = `${boxes[box]}`;
         newDiv.className = 'boxClear square';
         const flexBasis = 90 / slider.value;
         newDiv.style.flex = `1 0 ${flexBasis}%`;
@@ -49,6 +59,35 @@ function createGrid(boxes) {
     }
 }
 
+function changeToBlackMode() {
+    grid.setAttribute('class', 'black');
+    if (blackButton.getAttribute('class') === 'active') {
+        return;
+    };
+    toggleActiveButton();
+}
+
+function changeToRainbowMode() {
+    grid.setAttribute('class', 'rainbow');
+    if (rainbowButton.getAttribute('class') === 'active') {
+        return;
+    };
+    toggleActiveButton();
+}
+
+function toggleActiveButton() {
+    blackButton.classList.toggle('active');
+    rainbowButton.classList.toggle('active');
+}
+
 function simpleBlack(square) {
     square.style.backgroundColor = 'black';
+}
+
+function rainbow(square) {
+    square.style.backgroundColor = `rgb(${getRandomRGBValue()},${getRandomRGBValue()},${getRandomRGBValue()})`;
+}
+
+function getRandomRGBValue() {
+    return Math.floor(Math.random() * 256);
 }
