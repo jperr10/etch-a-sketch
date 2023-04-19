@@ -4,22 +4,16 @@ const output = document.getElementById("sizeValue");
 output.textContent = slider.value;
 
 let boxes = [];
-fillBoxesArray(slider.value);
-createGrid(boxes);
-gridList = grid.querySelectorAll('div');
-const squares = document.querySelectorAll('.square');
-squares.forEach((square) => {
-    square.addEventListener('mousemove', () => {
-        simpleBlack(square);
-    });
-});
+makeEtchASketch(slider.value);
 
 slider.oninput = function() {
     output.textContent = this.value;
-    if (boxes.length > 0) {
-        clearGrid(grid);
-    }
-    fillBoxesArray(slider.value);
+    makeEtchASketch(slider.value);
+}
+
+function makeEtchASketch(sliderValue) {
+    clearGrid(grid);
+    fillBoxesArray(sliderValue);
     createGrid(boxes);
     gridList = grid.querySelectorAll('div');
     const squares = document.querySelectorAll('.square');
@@ -38,7 +32,6 @@ function clearGrid(grid) {
 }
 
 function fillBoxesArray(length) {
-    //boxes = []; 
     for (let i = 0; i < length * length; i++) {
         boxes.push(i);
     }
@@ -46,7 +39,6 @@ function fillBoxesArray(length) {
 }
 
 function createGrid(boxes) {
-
     for (const box of boxes) {
         const newDiv = document.createElement('div');
         newDiv.id = `${boxes[box]}`;
