@@ -2,8 +2,10 @@ const grid = document.querySelector('#grid');
 const slider = document.getElementById("gridRange");
 const sizeValue = document.getElementById("sizeValue");
 sizeValue.textContent = slider.value;
+const styleOptions = document.getElementById("style-options"); 
 const blackButton = document.getElementById("black-button");
 const rainbowButton = document.getElementById("rainbow-button");
+const greyscaleButton = document.getElementById("greyscale-button");
 blackButton.classList.toggle('active');
 
 let boxes = [];
@@ -65,6 +67,7 @@ function changeToBlackMode() {
         return;
     };
     toggleActiveButton();
+    blackButton.classList.toggle('active');
 }
 
 function changeToRainbowMode() {
@@ -73,11 +76,23 @@ function changeToRainbowMode() {
         return;
     };
     toggleActiveButton();
+    rainbowButton.classList.toggle('active');
+}
+
+function changeToGreyscaleMode() {
+    grid.setAttribute('class', 'greyscale');
+    if (greyscaleButton.getAttribute('class') === 'active') {
+        return;
+    };
+    toggleActiveButton();
+    greyscaleButton.classList.toggle('active');
 }
 
 function toggleActiveButton() {
-    blackButton.classList.toggle('active');
-    rainbowButton.classList.toggle('active');
+    const buttons = document.querySelectorAll("button");
+    buttons.forEach((button) => {
+        button.classList.remove("active")
+    })
 }
 
 function simpleBlack(square) {
