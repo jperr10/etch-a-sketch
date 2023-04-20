@@ -10,7 +10,7 @@ blackButton.classList.toggle('active');
 
 let boxes = [];
 
-changeToBlackMode();
+changeToGreyscaleMode();
 makeEtchASketch(slider.value);
 
 slider.oninput = function() {
@@ -30,7 +30,9 @@ function makeEtchASketch(sliderValue) {
                 simpleBlack(square);
             } else if (grid.getAttribute('class') === 'rainbow') {
                 rainbow(square);
-            }
+            } else if (grid.getAttribute('class') === 'greyscale') {
+                greyscale(square);
+            };
         });
     });
 }
@@ -54,9 +56,10 @@ function createGrid(boxes) {
     for (const box of boxes) {
         const newDiv = document.createElement('div');
         //newDiv.id = `${boxes[box]}`;
-        newDiv.className = 'boxClear square';
+        newDiv.className = 'square';
         const flexBasis = 90 / slider.value;
         newDiv.style.flex = `1 0 ${flexBasis}%`;
+        newDiv.style.backgroundColor = 'rgba(0, 0, 0, 0.0)';
         grid.appendChild(newDiv);
     }
 }
@@ -100,9 +103,30 @@ function simpleBlack(square) {
 }
 
 function rainbow(square) {
+    console.log(square.style.backgroundColor)
     square.style.backgroundColor = `rgb(${getRandomRGBValue()},${getRandomRGBValue()},${getRandomRGBValue()})`;
+    
 }
 
 function getRandomRGBValue() {
     return Math.floor(Math.random() * 256);
+}
+
+function greyscale(square) {
+    getGreyscaleValue(square);
+    square.style.backgroundColor = `rgba(0, 0, 0, ${alphaValue})`;
+}
+
+function getGreyscaleValue(square) {
+    currentRGBA = square.style.backgroundColor;
+    rgbaArray = currentRGBA.split(' ');
+    if (rgbaArray.length < 4) {
+        return;
+    }
+    alphaString = rgbaArray[3];
+    alphaValue = Number(alphaString.replace(')', ''));  
+    if (alphaValue >= 1) {
+        return;
+    }
+    alphaValue = alphaValue + .1;
 }
