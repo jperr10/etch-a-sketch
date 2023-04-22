@@ -6,11 +6,12 @@ const styleOptions = document.getElementById("style-options");
 const blackButton = document.getElementById("black-button");
 const rainbowButton = document.getElementById("rainbow-button");
 const greyscaleButton = document.getElementById("greyscale-button");
+grid.classList.toggle('black');
 blackButton.classList.toggle('active');
 
 let boxes = [];
 
-changeToGreyscaleMode();
+changeToBlackMode();
 makeEtchASketch(slider.value);
 
 slider.oninput = function() {
@@ -59,39 +60,39 @@ function createGrid(boxes) {
         newDiv.className = 'square';
         const flexBasis = 90 / slider.value;
         newDiv.style.flex = `1 0 ${flexBasis}%`;
-        newDiv.style.backgroundColor = 'rgba(0, 0, 0, 0.0)';
+        newDiv.style.backgroundColor = 'rgba(0, 0, 0, 0)';
         grid.appendChild(newDiv);
     }
 }
 
 function changeToBlackMode() {
-    grid.setAttribute('class', 'black');
     if (blackButton.getAttribute('class') === 'active') {
         return;
     };
-    toggleActiveButton();
+    grid.setAttribute('class', 'black');
+    toggleActiveButtonOff();
     blackButton.classList.toggle('active');
 }
 
 function changeToRainbowMode() {
-    grid.setAttribute('class', 'rainbow');
     if (rainbowButton.getAttribute('class') === 'active') {
         return;
     };
-    toggleActiveButton();
+    grid.setAttribute('class', 'rainbow');
+    toggleActiveButtonOff();
     rainbowButton.classList.toggle('active');
 }
 
 function changeToGreyscaleMode() {
-    grid.setAttribute('class', 'greyscale');
     if (greyscaleButton.getAttribute('class') === 'active') {
         return;
     };
-    toggleActiveButton();
+    grid.setAttribute('class', 'greyscale');
+    toggleActiveButtonOff();
     greyscaleButton.classList.toggle('active');
 }
 
-function toggleActiveButton() {
+function toggleActiveButtonOff() {
     const buttons = document.querySelectorAll("button");
     buttons.forEach((button) => {
         button.classList.remove("active")
@@ -99,13 +100,26 @@ function toggleActiveButton() {
 }
 
 function simpleBlack(square) {
+    console.log(square.getAttribute('class'));
     square.style.backgroundColor = 'black';
+    
+    if (square.getAttribute('class') === 'square black') {
+        return;
+    } else {
+        square.setAttribute('class', 'square black');
+    }
+    console.log(square.classList);
 }
 
 function rainbow(square) {
-    console.log(square.style.backgroundColor)
+    console.log(square.getAttribute('class'));
     square.style.backgroundColor = `rgb(${getRandomRGBValue()},${getRandomRGBValue()},${getRandomRGBValue()})`;
-    
+    if (square.getAttribute('class') === 'square rainbow') {
+        return;
+    } else {
+        square.setAttribute('class', 'square rainbow');
+    }
+    console.log(square.classList);
 }
 
 function getRandomRGBValue() {
@@ -113,20 +127,34 @@ function getRandomRGBValue() {
 }
 
 function greyscale(square) {
-    getGreyscaleValue(square);
+    console.log(`The current class list is: ${square.getAttribute('class')}`);
+    getOldAlphaValue(square);
+    returnAlphaValue(oldAlpha);
     square.style.backgroundColor = `rgba(0, 0, 0, ${alphaValue})`;
+    if (square.getAttribute('class') === 'square greyscale') {
+        return;
+    } else {
+        square.setAttribute('class', 'square greyscale');
+    }
+    console.log(square.classList);
 }
 
-function getGreyscaleValue(square) {
-    currentRGBA = square.style.backgroundColor;
-    rgbaArray = currentRGBA.split(' ');
-    if (rgbaArray.length < 4) {
+function getOldAlphaValue(square) {
+    rgbaArray = square.style.backgroundColor.split(' ');
+    console.log(rgbaArray);
+    if (rgbaArray.length === 4) {
+        oldAlpha = Number(rgbaArray[3].replace(')', ''));
+        console.log(`Old alpha value: ${oldAlpha}`);
+        return oldAlpha;
+    } else if (rgbaArray.length === 1 || (rgbaArray.length === 3 && square.getAttribute('class') !== 'square greyscale')) { //Square background is "black" from black mode or rgb (not rgba) from rainbow
+        return oldAlpha = 0; 
+    }
+}
+
+function returnAlphaValue(oldAlpha) {
+    if (oldAlpha >= 1) {
         return;
     }
-    alphaString = rgbaArray[3];
-    alphaValue = Number(alphaString.replace(')', ''));  
-    if (alphaValue >= 1) {
-        return;
-    }
-    alphaValue = alphaValue + .1;
+    alphaValue = oldAlpha + .1;
+    console.log(`New alpha value: ${alphaValue}`);
 }
